@@ -258,6 +258,13 @@ RASPIBLITZ CONFIG FILE
 
 `CTRL-X` => `Yes` => `Enter` to save
 
+Uncomplicated Firewall (ufw) Adjustment ([help guide](https://raspibolt.org/guide/troubleshooting.html#are-ip-ports-accessible-through-the-firewall))
+
+   | Command | Description |
+   | --- | --- |
+   | `sudo ufw status` | # ensure Port 9735 is allowed from external |
+   | `sudo ufw allow 9735 comment 'allow LND from outside'` | # add Port 9735 if not already listed above |
+
 LND Systemd Startup adjustment
 
    | Command | Description |
