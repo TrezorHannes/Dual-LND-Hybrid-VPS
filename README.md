@@ -250,7 +250,6 @@ _Adjust ports and IPs accordingly!_
    | --- | --- |
    | `externalip=207.154.241.101:9735`           | # to add your VPS Public-IP |
    | `nat=false`                                 | # deactivate NAT |
-   | `tlsextraip=10.8.0.2`                     | # allow later LNbits-access to your rest-wallet API |
 
 [**tor**]
    | Command | Description |
@@ -287,7 +286,6 @@ LND Systemd Startup adjustment
    | --- | --- |
    | `externalip=207.154.241.101:9735`           | # to add your VPS Public-IP |
    | `nat=false`                                 | # deactivate NAT |
-   | `tlsextraip=10.8.0.2`                     | # allow later LNbits-access to your rest-wallet API |
 
 [**tor**]
    | Command | Description |
@@ -334,7 +332,6 @@ LND Systemd Startup adjustment
    | --- | --- |
    | `externalip=207.154.241.101:9735`           | # to add your VPS Public-IP |
    | `nat=false`                                 | # deactivate NAT |
-   | `tlsextraip=10.8.0.2`                     | # allow later LNbits-access to your rest-wallet API |
 
 [**tor**]
    | Command | Description |
@@ -387,7 +384,7 @@ LND Systemd Startup adjustment
    | --- | --- |
    | `externalip=207.154.241.101:9735` | # to add your VPS Public-IP | 
    | `nat=false`                       | # deactivate NAT | 
-   | `tlsextraip=10.8.0.2`           | # allow later LNbits-access to your rest-wallet API | 
+
 
 [**tor**]
    | Command | Description |
@@ -425,7 +422,6 @@ LND Restart to incorporate changes to `lnd.conf`
    | --- | --- |
    | `externalip=207.154.241.101:9735` | # to add your VPS Public-IP | 
    | `nat=false`                       | # deactivate NAT | 
-   | `tlsextraip=10.8.0.2`           | # allow later LNbits-access to your rest-wallet API | 
 
 [**tor**]
    | Command | Description |
