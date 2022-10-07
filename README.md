@@ -344,7 +344,7 @@ LND Systemd Startup adjustment
 `CTRL-X` => `Yes` => `Enter` to save
   
 RASPIBLITZ LND-checkup FILE
-`sudo nano /home/admin/config.scripts/lnd.check.sh` since Raspiblitz has some LND pre-check scripts which otherwise overwrite your settings. Go to line 184 or search for `enforce PublicIP if (if not running Tor)`. Uncomment those 5 lines indicated here:
+`sudo nano /home/admin/config.scripts/lnd.check.sh` since Raspiblitz has some LND pre-check scripts which otherwise overwrite your settings. Go to line 184 or search for `enforce PublicIP if (if not running Tor)`. Comment out those 5 lines indicated here:
 
 ```
 #  if [ "${runBehindTor}" != "on" ]; then
