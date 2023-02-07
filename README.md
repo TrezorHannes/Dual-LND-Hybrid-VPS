@@ -147,6 +147,31 @@ In this section we'll switch our work from setting up the server towards getting
    - [ ] `docker run -v $OVPN_DATA:/etc/openvpn --rm kylemanna/openvpn ovpn_getclient NODE-NAME1 > NODE-NAME1.ovpn` which will prompt you to provide the secure password you have generated earlier. Afterwards, it'll store `bringmesomesats.ovpn` in the directory you currently are.
    - [ ] Do the same for your Node 2: `docker run -v $OVPN_DATA:/etc/openvpn --rm kylemanna/openvpn ovpn_getclient NODE-NAME2 > NODE-NAME2.ovpn`
 
+### VPS: Assign a fixed IP to the VPN tunnel for each node
+In order to edit the data for the Docker volume, you must first switch to the superuser/root account
+```
+sudo su
+cd /var/lib/docker/volumes/ovpn-data/_data/ccd/
+nano NODE-NAME1
+```
+-> fill with: `ifconfig-push 192.168.255.6 192.168.255.5`<br>
+-> CTRL-x -> y -> RETURN
+
+Repeat for the second node
+
+```
+nano NODE-NAME2
+```
+-> fill with: `ifconfig-push 192.168.255.10 192.168.255.9`<br>
+-> CTRL-x -> y -> RETURN
+
+The third node would have the IP extension `.14` / `.13`. and the fourth node get the `.18` / `.17`.
+The node side of the tunnel is always assigned the higher number, e.g. `.6` and the server is assigned e.g. `.5`.
+
+To activate the settings reboot the VPS `$ reboot` or restart the docker container `$ docker restart <Docker-ID>` and `$ exit` the superuser/root.
+
+On the node side you will later check the IP assignment with the command `$ ip add show tun0`.
+
 
 ## Into the Tunnel
 We have installed the tunnel through the mountain, but need to get our LND Node to use it.
@@ -171,7 +196,7 @@ $ sudo cp -p /home/admin/VPNcert/bringmesomesats.ovpn /etc/openvpn/CERT.conf
 $ sudo systemctl enable openvpn@CERT
 $ sudo systemctl start openvpn@CERT
 ```
-You should see something similiar to the following output. Note this one line indicating the next important IP Adress `VPN Client IP: 192.168.255.6`. Make a note of it, we need it for port-configuration at the server, soon.
+You should see something similiar to the following output. Here you will now also find your previously assigned IP address 192.168.255.6 and the server peer 192.168.255.5 for the tunnel.
 ```
 * openvpn@CERT.service - OpenVPN connection to CERT
      Loaded: loaded (/lib/systemd/system/openvpn@.service; enabled; vendor preset: enabled)
@@ -202,14 +227,14 @@ You can safely repeat this step at the second LND Node 2 now. The established tu
 
 
 ### VPS: Add routing tables configuration into your droplet docker
-Back to your terminal window connected to your VPS. We have the `VPN Client Node 1 IP: 192.168.255.6` and `VPN Client Node 2 IP: 192.168.255.11` now, which we need to tell our VPS where it should route those packets to. To achieve that, we'll get back into the docker container and add IPTables rules.
+Back to your terminal window connected to your VPS. We have the `VPN Client Node 1 IP: 192.168.255.6` and `VPN Client Node 2 IP: 192.168.255.10` now, which we need to tell our VPS where it should route those packets to. To achieve that, we'll get back into the docker container and add IPTables rules.
 
    - [ ] [Remember](#4-vps-install-openvpn-server) how to get into the container? Arrow-up on your keyboard, or do `docker ps` and `docker exec -it <CONTAINER-ID> sh`
    - [ ] Doublecheck your VPN Client IP, and adjust it in the following IPtables commands you enter into the container and confirm with Enter
 
 ```
 $ iptables -A PREROUTING -t nat -i eth0 -p tcp -m tcp --dport 9735 -j DNAT --to 192.168.255.6:9735
-$ iptables -A PREROUTING -t nat -i eth0 -p tcp -m tcp --dport 9736 -j DNAT --to 192.168.255.11:9736
+$ iptables -A PREROUTING -t nat -i eth0 -p tcp -m tcp --dport 9736 -j DNAT --to 192.168.255.10:9736
 $ iptables -t nat -A POSTROUTING -d 192.168.255.0/24 -o tun0 -j MASQUERADE
 $ exit
 ```
@@ -223,7 +248,7 @@ Your VPS needs operational maintenance, and a reboot sometimes isn't avoidable. 
 
 ```
 $ iptables -A PREROUTING -t nat -i eth0 -p tcp -m tcp --dport 9735 -j DNAT --to 192.168.255.6:9735
-$ iptables -A PREROUTING -t nat -i eth0 -p tcp -m tcp --dport 9736 -j DNAT --to 192.168.255.11:9736
+$ iptables -A PREROUTING -t nat -i eth0 -p tcp -m tcp --dport 9736 -j DNAT --to 192.168.255.10:9736
 $ iptables -t nat -A POSTROUTING -d 192.168.255.0/24 -o tun0 -j MASQUERADE
 $ exit
 ```
